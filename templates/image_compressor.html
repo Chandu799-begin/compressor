@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Image Compressor - {{ site_name }}{% endblock %}
+{% block content %}
+{% include "partials/workspace.html" with mode="image" page_title="Image Compressor" page_subtitle="Shrink JPG, JPEG, PNG and WEBP to an exact target size while keeping the best possible quality." eyebrow="Pillow powered engine" %}
+{% endblock %}

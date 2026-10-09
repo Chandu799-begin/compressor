@@ -1,0 +1,75 @@
+/* ==========================================================================
+   SmartCompress Pro - animations.css
+   Keyframes and animation helper classes.
+   ========================================================================== */
+
+@keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.08); }
+    66% { transform: translate(-30px, 25px) scale(.95); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes floatY {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 10px 26px -10px rgba(91, 108, 255, .9); }
+    50% { box-shadow: 0 10px 34px -6px rgba(34, 211, 238, .9); }
+    100% { box-shadow: 0 10px 26px -10px rgba(91, 108, 255, .9); }
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Helper classes (also used as GSAP fallbacks) */
+.animate-up { animation: fadeUp .7s cubic-bezier(.2, .7, .3, 1) both; }
+.animate-pop { animation: popIn .45s cubic-bezier(.2, .7, .3, 1) both; }
+
+.animate-up:nth-child(1) { animation-delay: .05s; }
+.animate-up:nth-child(2) { animation-delay: .12s; }
+.animate-up:nth-child(3) { animation-delay: .19s; }
+.animate-up:nth-child(4) { animation-delay: .26s; }
+.animate-up:nth-child(5) { animation-delay: .33s; }
+.animate-up:nth-child(6) { animation-delay: .40s; }
+
+.spin-slow { animation: spinSlow 8s linear infinite; }
+
+/* 3D hover transforms */
+.tilt {
+    transform-style: preserve-3d;
+    transition: transform .35s cubic-bezier(.2, .7, .3, 1);
+}
+.tilt:hover { transform: perspective(900px) rotateX(4deg) rotateY(-4deg) translateY(-4px); }

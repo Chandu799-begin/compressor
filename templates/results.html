@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Results - {{ job.uploaded_file.filename }} - {{ site_name }}{% endblock %}
+{% block content %}
+<section class="page-section container">
+    <div class="section-head animate-up">
+        <a href="{% url 'compressor:dashboard' %}" class="btn btn-ghost btn-sm mb-3"><i class="fa-solid fa-arrow-left me-2"></i>Back to dashboard</a>
+        <span class="eyebrow"><i class="fa-solid fa-chart-simple"></i> Compression result</span>
+        <h1 class="page-title text-truncate">{{ job.uploaded_file.filename }}</h1>
+        <div class="d-flex flex-wrap gap-2 mt-2">
+            <span class="status-pill status-{{ job.status }}">{{ job.get_status_display }}</span>
+            <span class="badge-soft">{{ job.uploaded_file.file_type|upper }}</span>
+            <span class="badge-soft">{{ job.created_at|date:"M d, Y H:i" }}</span>
+        </div>
+    </div>
+
+    <div class="result-detail-grid">
+        <div class="glass stat-grid-detail animate-up">
+            <div class="detail-metric">
+                <span>Original size</span>
+                <strong>{{ job.uploaded_file.original_size_display }}</strong>
+            </div>
+            <div class="detail-metric">
+                <span>Target size</span>
+                <strong>{{ job.target_size_display }}</strong>
+            </div>
+            <div class="detail-metric">
+                <span>Compressed size</span>
+                <strong>{% if job.result %}{{ job.result.compressed_size_display }}{% else %}—{% endif %}</strong>
+            </div>
+            <div class="detail-metric accent">
+                <span>Compression</span>
+                <strong>{% if job.result %}{{ job.result.compression_percentage|floatformat:1 }}%{% else %}—{% endif %}</strong>
+            </div>
+            <div class="detail-metric">
+                <span>Space saved</span>
+                <strong>{% if job.result %}{{ job.result.saved_display }}{% else %}—{% endif %}</strong>
+            </div>
+            <div class="detail-metric">
+                <span>Processing time</span>
+                <strong>{{ job.processing_time|floatformat:2 }}s</strong>
+            </div>
+        </div>
+
+        <div class="glass compare-card animate-up">
+            <h4><i class="fa-solid fa-arrows-left-right"></i> Before &amp; After</h4>
+            {% if job.uploaded_file.is_image and job.result %}
+            <div class="compare-viewer" id="compareViewer">
+                <img src="{% url 'compressor:preview_original' job.uploaded_file.id %}" alt="Original" class="compare-original">
+                <div class="compare-after" id="compareAfter">
+                    <img src="{% url 'compressor:preview' job.id %}" alt="Compressed">
+                </div>
+                <div class="compare-handle" id="compareHandle"><i class="fa-solid fa-left-right"></i></div>
+            </div>
+            <input type="range" min="0" max="100" value="50" class="compare-range" id="compareRange" aria-label="Compare slider">
+            <div class="d-flex justify-content-between small text-dim">
+                <span>Original</span><span>Compressed</span>
+            </div>
+            {% elif job.result %}
+            <div class="doc-preview">
+                <i class="fa-solid fa-file-lines"></i>
+                <p>This {{ job.uploaded_file.file_type|upper }} file was optimized. Layout, formulas and text are preserved.</p>
+            </div>
+            {% else %}
+            <p class="text-muted-soft mb-0">No preview available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if job.message %}
+    <div class="alert alert-glass alert-warning mt-4 animate-up" role="alert">
+        <i class="fa-solid fa-circle-info me-2"></i>{{ job.message }}
+    </div>
+    {% endif %}
+
+    <div class="action-bar mt-4 animate-up">
+        {% if job.result %}
+        <a href="{% url 'compressor:download' job.id %}" class="btn btn-glow btn-lg"><i class="fa-solid fa-download me-2"></i>Download compressed file</a>
+        {% if job.uploaded_file.is_image %}
+        <a href="{% url 'compressor:preview' job.id %}" target="_blank" class="btn btn-outline-glow btn-lg"><i class="fa-solid fa-eye me-2"></i>View result</a>
+        {% endif %}
+        {% endif %}
+        <button class="btn btn-danger-soft btn-lg delete-job-page" data-job-id="{{ job.id }}"><i class="fa-solid fa-trash me-2"></i>Delete</button>
+    </div>
+</section>
+{% endblock %}

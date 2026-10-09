@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ site_name }} - {{ site_tagline }}{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-content container">
+        <span class="eyebrow animate-up"><i class="fa-solid fa-sparkles"></i> Premium image &amp; document compression</span>
+        <h1 class="hero-title animate-up">
+            Compress Smarter.<br><span class="grad-text">Share Faster.</span>
+        </h1>
+        <p class="hero-sub animate-up">
+            Shrink images, PDFs and Office documents to any target size — KB, MB or GB — with a
+            premium engine that keeps the best possible quality.
+        </p>
+        <div class="hero-actions animate-up">
+            <a href="{% url 'compressor:image_compressor' %}" class="btn btn-glow btn-lg">
+                <i class="fa-solid fa-image me-2"></i>Compress Images
+            </a>
+            <a href="{% url 'compressor:document_compressor' %}" class="btn btn-outline-glow btn-lg">
+                <i class="fa-solid fa-file-lines me-2"></i>Compress Documents
+            </a>
+        </div>
+        <div class="hero-stats animate-up">
+            <div class="hero-stat glass"><strong>4</strong><span>File formats</span></div>
+            <div class="hero-stat glass"><strong>GB</strong><span>Target sizes</span></div>
+            <div class="hero-stat glass"><strong>&lt;1s</strong><span>Typical images</span></div>
+            <div class="hero-stat glass"><strong>100%</strong><span>Layout safe</span></div>
+        </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+        <div class="glass-float float-a"><i class="fa-solid fa-image"></i><span>-72%</span></div>
+        <div class="glass-float float-b"><i class="fa-solid fa-file-pdf"></i><span>-48%</span></div>
+        <div class="glass-float float-c"><i class="fa-solid fa-file-excel"></i><span>-35%</span></div>
+        <div class="glass-float float-d"><i class="fa-solid fa-file-powerpoint"></i><span>-61%</span></div>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-head text-center animate-up">
+        <span class="eyebrow"><i class="fa-solid fa-bolt"></i> How it works</span>
+        <h2 class="page-title">Three steps. Any size.</h2>
+    </div>
+    <div class="step-grid">
+        <div class="glass step-card animate-up">
+            <span class="step-no">01</span>
+            <div class="step-ico"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <h4>Upload</h4>
+            <p>Drag &amp; drop single or multiple files, or stream GB-sized files with chunked uploads.</p>
+        </div>
+        <div class="glass step-card animate-up">
+            <span class="step-no">02</span>
+            <div class="step-ico"><i class="fa-solid fa-sliders"></i></div>
+            <h4>Set the target</h4>
+            <p>Pick a preset in KB, MB or GB, or dial in a custom target and compression level.</p>
+        </div>
+        <div class="glass step-card animate-up">
+            <span class="step-no">03</span>
+            <div class="step-ico"><i class="fa-solid fa-download"></i></div>
+            <h4>Download</h4>
+            <p>Preview before &amp; after, compare savings and download your optimized files.</p>
+        </div>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-head text-center animate-up">
+        <span class="eyebrow"><i class="fa-solid fa-gem"></i> Features</span>
+        <h2 class="page-title">Built for professionals</h2>
+    </div>
+    <div class="feature-grid">
+        <div class="glass feature-card animate-up">
+            <div class="feature-ico grad-1"><i class="fa-solid fa-crosshairs"></i></div>
+            <h4>Exact target size</h4>
+            <p>Iterative quality search plus optional resolution reduction hits your KB target precisely.</p>
+        </div>
+        <div class="glass feature-card animate-up">
+            <div class="feature-ico grad-2"><i class="fa-solid fa-file-shield"></i></div>
+            <h4>Layout-safe documents</h4>
+            <p>PDF text, DOCX tables, XLSX formulas and PPTX slides keep their structure.</p>
+        </div>
+        <div class="glass feature-card animate-up">
+            <div class="feature-ico grad-3"><i class="fa-solid fa-images"></i></div>
+            <h4>Bulk + ZIP download</h4>
+            <p>Compress many files at once and grab everything in a single archive.</p>
+        </div>
+        <div class="glass feature-card animate-up">
+            <div class="feature-ico grad-4"><i class="fa-solid fa-server"></i></div>
+            <h4>Celery background jobs</h4>
+            <p>Large files run asynchronously with chunked streaming and live status.</p>
+        </div>
+        <div class="glass feature-card animate-up">
+            <div class="feature-ico grad-5"><i class="fa-solid fa-lock"></i></div>
+            <h4>Secure by design</h4>
+            <p>Content validation, rate limiting, CSRF protection and protected downloads.</p>
+        </div>
+        <div class="glass feature-card animate-up">
+            <div class="feature-ico grad-6"><i class="fa-solid fa-moon"></i></div>
+            <h4>Dark &amp; light themes</h4>
+            <p>A premium glassmorphism interface with smooth GSAP animations and reduced-motion support.</p>
+        </div>
+    </div>
+</section>
+
+{% if recent_jobs %}
+<section class="container section-block">
+    <div class="section-head animate-up">
+        <span class="eyebrow"><i class="fa-solid fa-clock-rotate-left"></i> Recent</span>
+        <h2 class="page-title">Your latest compressions</h2>
+    </div>
+    <div class="results-grid">
+        {% for job in recent_jobs %}
+            {% include "partials/result_card.html" with job=job %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="container section-block">
+    <div class="glass cta-band animate-up">
+        <div>
+            <h2 class="mb-1">Ready to compress smarter?</h2>
+            <p class="text-muted-soft mb-0">Create a free account to keep your compression history and preferences.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'accounts:register' %}" class="btn btn-glow btn-lg">Create account</a>
+            <a href="{% url 'compressor:image_compressor' %}" class="btn btn-outline-glow btn-lg">Try it now</a>
+        </div>
+    </div>
+</section>
+
+<footer class="sc-footer">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+            <span class="brand-logo small"><i class="fa-solid fa-bolt"></i></span>
+            <span>{{ site_name }}</span>
+        </div>
+        <p class="mb-0 text-dim small">{{ site_tagline }} &middot; Built with Django &amp; Pillow</p>
+        <div class="d-flex gap-3 text-dim">
+            <a href="{% url 'compressor:image_compressor' %}">Images</a>
+            <a href="{% url 'compressor:document_compressor' %}">Documents</a>
+            <a href="{% url 'compressor:dashboard' %}">Dashboard</a>
+        </div>
+    </div>
+</footer>
+{% endblock %}

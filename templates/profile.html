@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile - {{ site_name }}{% endblock %}
+{% block content %}
+<section class="page-section container">
+    <div class="section-head animate-up">
+        <span class="eyebrow"><i class="fa-solid fa-id-badge"></i> Account</span>
+        <h1 class="page-title">Your profile</h1>
+        <p class="page-subtitle">Manage your avatar and default compression preferences.</p>
+    </div>
+    <div class="result-detail-grid">
+        <div class="glass profile-card animate-up">
+            <div class="profile-avatar">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="Avatar">
+                {% else %}
+                    <i class="fa-solid fa-user"></i>
+                {% endif %}
+            </div>
+            <h3 class="mb-0">{{ user.get_full_name|default:user.username }}</h3>
+            <p class="text-dim mb-1">@{{ user.username }}</p>
+            <p class="text-muted-soft small">{{ user.email }}</p>
+            <div class="badge-soft mt-2">Member since {{ user.date_joined|date:"M Y" }}</div>
+        </div>
+        <div class="glass control-card animate-up">
+            <h4><i class="fa-solid fa-gear"></i> Preferences</h4>
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-glow w-100"><i class="fa-solid fa-floppy-disk me-2"></i>Save changes</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

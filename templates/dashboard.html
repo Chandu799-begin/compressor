@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Dashboard - {{ site_name }}{% endblock %}
+{% block content %}
+<section class="page-section container">
+    <div class="section-head d-flex flex-wrap justify-content-between align-items-end gap-3 animate-up">
+        <div>
+            <span class="eyebrow"><i class="fa-solid fa-gauge-high"></i> Personal dashboard</span>
+            <h1 class="page-title">Welcome back, {{ user.first_name|default:user.username }}</h1>
+            <p class="page-subtitle mb-0">Track every compression, revisit results and manage your history.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'compressor:image_compressor' %}" class="btn btn-glow"><i class="fa-solid fa-plus me-2"></i>New compression</a>
+            <button class="btn btn-danger-soft" id="clearHistoryBtn"><i class="fa-solid fa-trash me-2"></i>Clear history</button>
+        </div>
+    </div>
+
+    <div class="stat-grid">
+        <div class="glass stat-card animate-up">
+            <div class="stat-ico grad-1"><i class="fa-solid fa-layer-group"></i></div>
+            <div><strong>{{ stats.total_jobs }}</strong><span>Total jobs</span></div>
+        </div>
+        <div class="glass stat-card animate-up">
+            <div class="stat-ico grad-2"><i class="fa-solid fa-circle-check"></i></div>
+            <div><strong>{{ stats.completed }}</strong><span>Completed</span></div>
+        </div>
+        <div class="glass stat-card animate-up">
+            <div class="stat-ico grad-3"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div><strong>{{ stats.failed }}</strong><span>Failed</span></div>
+        </div>
+        <div class="glass stat-card animate-up">
+            <div class="stat-ico grad-4"><i class="fa-solid fa-database"></i></div>
+            <div><strong>{{ stats.original_bytes_display }}</strong><span>Data processed</span></div>
+        </div>
+    </div>
+
+    {% if page_obj.object_list %}
+        <div class="results-grid" id="historyGrid">
+            {% for job in page_obj %}
+                {% include "partials/result_card.html" with job=job %}
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <nav class="mt-4" aria-label="History pagination">
+            <ul class="pagination justify-content-center premium-pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+        <div class="glass empty-state animate-up">
+            <div class="empty-ico"><i class="fa-solid fa-inbox"></i></div>
+            <h3>No compressions yet</h3>
+            <p class="text-muted-soft">Upload an image or document to see it appear here.</p>
+            <a href="{% url 'compressor:image_compressor' %}" class="btn btn-glow">Start compressing</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+{% block extra_js %}
+<script>window.scClearUrl = "{% url 'compressor:clear_history' %}";</script>
+{% endblock %}

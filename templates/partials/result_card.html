@@ -1,0 +1,58 @@
+{% load static %}
+<div class="glass result-card animate-up" data-job-id="{{ job.id }}">
+    <div class="result-top">
+        <div class="result-type
+            {% if job.uploaded_file.category == 'image' %}type-image{% endif %}">
+            {% if job.uploaded_file.extension == '.pdf' %}<i class="fa-solid fa-file-pdf"></i>
+            {% elif job.uploaded_file.extension == '.docx' %}<i class="fa-solid fa-file-word"></i>
+            {% elif job.uploaded_file.extension == '.xlsx' %}<i class="fa-solid fa-file-excel"></i>
+            {% elif job.uploaded_file.extension == '.pptx' %}<i class="fa-solid fa-file-powerpoint"></i>
+            {% else %}<i class="fa-solid fa-image"></i>{% endif %}
+        </div>
+        <div class="flex-grow-1 min-w-0">
+            <h5 class="text-truncate mb-0" title="{{ job.uploaded_file.filename }}">{{ job.uploaded_file.filename }}</h5>
+            <span class="text-dim small">{{ job.uploaded_file.file_type|upper }} &middot; {{ job.created_at|date:"M d, Y H:i" }}</span>
+        </div>
+        <span class="status-pill status-{{ job.status }}">{{ job.get_status_display }}</span>
+    </div>
+
+    <div class="result-metrics">
+        <div class="metric">
+            <span class="metric-label">Original</span>
+            <span class="metric-value">{{ job.uploaded_file.original_size_display }}</span>
+        </div>
+        <div class="metric">
+            <span class="metric-label">Target</span>
+            <span class="metric-value">{{ job.target_size_display }}</span>
+        </div>
+        {% if job.result %}
+        <div class="metric">
+            <span class="metric-label">Compressed</span>
+            <span class="metric-value">{{ job.result.compressed_size_display }}</span>
+        </div>
+        <div class="metric accent">
+            <span class="metric-label">Savings</span>
+            <span class="metric-value">{{ job.result.compression_percentage|floatformat:1 }}%</span>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if job.result %}
+    <div class="progress premium-progress slim">
+        <div class="progress-bar" style="width: {{ job.result.compression_percentage|floatformat:0 }}%"></div>
+    </div>
+    {% endif %}
+
+    {% if job.message %}<p class="result-message small">{{ job.message }}</p>{% endif %}
+
+    <div class="result-actions">
+        {% if job.result %}
+            {% if job.uploaded_file.is_image %}
+            <a href="{% url 'compressor:preview' job.id %}" target="_blank" class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye me-1"></i>Preview</a>
+            {% endif %}
+            <a href="{% url 'compressor:download' job.id %}" class="btn btn-glow btn-sm"><i class="fa-solid fa-download me-1"></i>Download</a>
+        {% endif %}
+        <a href="{% url 'compressor:results' job.id %}" class="btn btn-ghost btn-sm">Details</a>
+        <button type="button" class="btn btn-danger-soft btn-sm delete-job" data-job-id="{{ job.id }}" data-delete-url="{% url 'compressor:delete_job' job.id %}"><i class="fa-solid fa-trash"></i></button>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+/* ==========================================================================
+   SmartCompress Pro - responsive.css
+   ========================================================================== */
+
+@media (max-width: 1199.98px) {
+    .hero-visual { display: none; }
+}
+
+@media (max-width: 991.98px) {
+    .sc-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1080;
+        height: 100vh;
+        transform: translateX(-105%);
+        transition: transform .35s cubic-bezier(.2, .7, .3, 1);
+        background: var(--bg-soft);
+        box-shadow: var(--shadow);
+    }
+    .sc-sidebar.open { transform: translateX(0); }
+    body.sidebar-open::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .5);
+        z-index: 1070;
+    }
+    .workspace-grid { grid-template-columns: 1fr; }
+    .result-detail-grid { grid-template-columns: 1fr; }
+    .sc-main { padding-top: .5rem; }
+}
+
+@media (max-width: 767.98px) {
+    body { font-size: 14.5px; }
+    .page-section { padding: 1.6rem 0 .5rem; }
+    .dropzone-card { padding: 1.8rem 1.1rem; }
+    .floating-icons { display: none; }
+    .result-metrics { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid-detail { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats { gap: .6rem; }
+    .hero-stat { min-width: 100px; padding: .7rem 1rem; }
+    .preset-grid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+    .cta-band { flex-direction: column; align-items: flex-start; }
+    .toast-stack { left: 1rem; right: 1rem; max-width: none; }
+}
+
+@media (max-width: 575.98px) {
+    .hero-title { font-size: 2.1rem; }
+    .hero-actions .btn { width: 100%; }
+    .results-grid { grid-template-columns: 1fr; }
+    .detail-metric strong { font-size: 1.05rem; }
+    .page-title { font-size: 1.45rem; }
+    .brand-text { display: none; }
+}

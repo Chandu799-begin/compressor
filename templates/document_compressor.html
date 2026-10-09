@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Document Compressor - {{ site_name }}{% endblock %}
+{% block content %}
+{% include "partials/workspace.html" with mode="document" page_title="Document Compressor" page_subtitle="Optimize PDF, DOCX, XLSX and PPTX files. Embedded media is compressed while layouts stay intact." eyebrow="PyMuPDF + OOXML optimizer" %}
+{% endblock %}

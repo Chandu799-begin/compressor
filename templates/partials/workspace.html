@@ -1,0 +1,182 @@
+{% load static %}
+<section class="page-section" data-workspace data-mode="{{ mode }}"
+         data-upload-url="{% url 'compressor:upload' %}"
+         data-chunk-url="{% url 'compressor:chunk_upload' %}"
+         data-compress-url="{% url 'compressor:compress' %}"
+         data-status-url-template="{% url 'compressor:job_status' 0 %}"
+         data-download-all-url="{% url 'compressor:download_all' %}"
+         data-max-upload="{{ max_upload_mb }}">
+
+    <div class="section-head animate-up">
+        <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> {{ eyebrow|default:"Premium compression engine" }}</span>
+        <h1 class="page-title">{{ page_title }}</h1>
+        <p class="page-subtitle">{{ page_subtitle }}</p>
+    </div>
+
+    <div class="mode-switch glass animate-up">
+        <a href="{% url 'compressor:image_compressor' %}" class="mode-tab {% if mode == 'image' %}active{% endif %}">
+            <i class="fa-solid fa-image"></i> Image Compressor
+        </a>
+        <a href="{% url 'compressor:document_compressor' %}" class="mode-tab {% if mode == 'document' %}active{% endif %}">
+            <i class="fa-solid fa-file-lines"></i> Document Compressor
+        </a>
+    </div>
+
+    <div class="workspace-grid">
+        <div class="workspace-left">
+            <!-- Dropzone -->
+            <div class="glass dropzone-card animate-up" id="dropzone">
+                <input type="file" id="fileInput" class="d-none"
+                       {% if mode == 'image' %}accept=".jpg,.jpeg,.png,.webp,.bmp,.gif,.tiff,image/*" multiple{% else %}accept=".pdf,.docx,.xlsx,.pptx,application/pdf" multiple{% endif %}>
+                <div class="floating-icons" aria-hidden="true">
+                    <span class="file-ico ico-pdf"><i class="fa-solid fa-file-pdf"></i></span>
+                    <span class="file-ico ico-img"><i class="fa-solid fa-image"></i></span>
+                    <span class="file-ico ico-doc"><i class="fa-solid fa-file-word"></i></span>
+                    <span class="file-ico ico-xls"><i class="fa-solid fa-file-excel"></i></span>
+                    <span class="file-ico ico-ppt"><i class="fa-solid fa-file-powerpoint"></i></span>
+                </div>
+                <div class="dropzone-inner">
+                    <div class="dropzone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <h3>Drag &amp; drop your files here</h3>
+                    <p class="text-muted-soft">or <button type="button" class="link-btn" id="browseBtn">browse files</button> from your device</p>
+                    <p class="small text-dim">
+                        Supports
+                        {% if mode == 'image' %}JPG, JPEG, PNG, WEBP{% else %}PDF, DOCX, XLSX, PPTX{% endif %}
+                        &middot; up to {{ max_upload_mb }} MB each
+                    </p>
+                </div>
+            </div>
+
+            <!-- File list -->
+            <div class="file-list" id="fileList"></div>
+
+            <!-- Progress -->
+            <div class="glass progress-card d-none" id="progressCard">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-600"><i class="fa-solid fa-circle-notch fa-spin me-2"></i>Compressing…</span>
+                    <span class="text-dim" id="progressLabel">0%</span>
+                </div>
+                <div class="progress premium-progress">
+                    <div class="progress-bar" id="progressBar" role="progressbar" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="workspace-right">
+            <!-- Target size -->
+            <div class="glass control-card animate-up">
+                <div class="control-head">
+                    <h4><i class="fa-solid fa-bullseye"></i> Target Size</h4>
+                    <label class="switch">
+                        <input type="checkbox" id="bestEffortToggle">
+                        <span>Best effort</span>
+                    </label>
+                </div>
+                <div class="unit-tabs" id="unitTabs">
+                    <button type="button" class="unit-tab active" data-unit="KB">KB</button>
+                    <button type="button" class="unit-tab" data-unit="MB">MB</button>
+                    <button type="button" class="unit-tab" data-unit="GB">GB</button>
+                </div>
+                <div class="preset-grid" id="presetGrid"></div>
+                <div class="custom-size">
+                    <input type="number" class="form-control" id="customSize" min="0.1" step="0.1" placeholder="Custom…">
+                    <select class="form-select" id="customUnit">
+                        <option value="KB">KB</option>
+                        <option value="MB">MB</option>
+                        <option value="GB">GB</option>
+                    </select>
+                </div>
+                <p class="small text-dim mt-2 mb-0" id="targetHint">Any value works: presets or a custom number in KB / MB / GB. Output is compressed to the target or as close as possible without exceeding it. 1 KB = 1,024 bytes.</p>
+            </div>
+
+            <!-- Level -->
+            <div class="glass control-card animate-up">
+                <h4><i class="fa-solid fa-sliders"></i> Compression Quality</h4>
+                <div class="level-pills" id="levelPills">
+                    <label class="level-pill"><input type="radio" name="level" value="low"><span>Low</span></label>
+                    <label class="level-pill active"><input type="radio" name="level" value="medium" checked><span>Medium</span></label>
+                    <label class="level-pill"><input type="radio" name="level" value="high"><span>High</span></label>
+                    <label class="level-pill"><input type="radio" name="level" value="custom"><span>Custom</span></label>
+                </div>
+            </div>
+
+            <!-- Advanced -->
+            <div class="glass control-card animate-up">
+                <h4><i class="fa-solid fa-wand-magic-sparkles"></i> Advanced</h4>
+                {% if mode == 'image' %}
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="form-label small">Max width</label>
+                        <input type="number" class="form-control" id="maxWidth" placeholder="auto" min="1">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small">Max height</label>
+                        <input type="number" class="form-control" id="maxHeight" placeholder="auto" min="1">
+                    </div>
+                </div>
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="keepAspect" checked>
+                    <label class="form-check-label" for="keepAspect">Maintain aspect ratio</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="stripMetadata">
+                    <label class="form-check-label" for="stripMetadata">Remove metadata (EXIF)</label>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label small" for="outputFormat">Output format</label>
+                    <select class="form-select" id="outputFormat">
+                        <option value="auto">Keep original format</option>
+                        <option value="jpg">JPG / JPEG</option>
+                        <option value="png">PNG (keeps transparency)</option>
+                        <option value="webp">WEBP</option>
+                    </select>
+                </div>
+                {% else %}
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="downsample" checked>
+                    <label class="form-check-label" for="downsample">Downsample scanned images</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="ghostscript">
+                    <label class="form-check-label" for="ghostscript">Use Ghostscript (if installed)</label>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label small" for="outputFormat">Convert to format</label>
+                    <select class="form-select" id="outputFormat">
+                        <option value="auto">Keep original format</option>
+                        <option value="pdf">PDF</option>
+                        <option value="docx">DOCX (Word)</option>
+                        <option value="xlsx">XLSX (Excel)</option>
+                        <option value="pptx">PPTX (PowerPoint)</option>
+                    </select>
+                </div>
+                <p class="small text-dim mt-2 mb-0">
+                    Format conversion needs LibreOffice installed on the server.
+                    Tables, formulas, slides and readable PDF text are always preserved.
+                </p>
+                {% endif %}
+            </div>
+
+            <div class="action-bar animate-up">
+                <button class="btn btn-glow btn-lg w-100" id="compressBtn" disabled>
+                    <i class="fa-solid fa-bolt me-2"></i>Compress Files
+                </button>
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-ghost w-50" id="clearBtn"><i class="fa-solid fa-broom me-2"></i>Clear</button>
+                    <button class="btn btn-ghost w-50" id="downloadAllBtn" disabled><i class="fa-solid fa-file-zipper me-2"></i>Download All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-wrap">
+        <div class="d-flex justify-content-between align-items-center mb-3 d-none" id="resultsHeader">
+            <h3 class="mb-0"><i class="fa-solid fa-chart-simple me-2"></i>Compression Results</h3>
+            <span class="badge-soft" id="resultsSummary"></span>
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+    </div>
+</section>
+
+{{ size_presets|json_script:"sizePresetsData" }}

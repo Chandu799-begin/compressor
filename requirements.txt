@@ -1,0 +1,24 @@
+# ---------------------------------------------------------------------------
+# SmartCompress Pro - Python dependencies
+# Python 3.13
+# ---------------------------------------------------------------------------
+Django>=5.1,<5.3
+djangorestframework>=3.15
+Pillow>=10.4
+PyMuPDF>=1.24
+python-docx>=1.1
+openpyxl>=3.1
+python-pptx>=1.0
+celery>=5.4
+redis>=5.0
+python-dotenv>=1.0
+django-ratelimit>=4.1
+whitenoise>=6.7
+
+# --- Optional advanced PDF compression --------------------------------
+# Ghostscript is an OS-level binary (not a pip package). Install it from
+# https://www.ghostscript.com/ and make sure `gswin64c` / `gs` is on PATH.
+# It is used automatically when available; otherwise PyMuPDF is used.
+
+# --- Production server (Linux only) -----------------------------------
+# gunicorn>=22.0
